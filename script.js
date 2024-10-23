@@ -1,20 +1,34 @@
-//your JS code here. If required.
-let currentSound = null;
 
-function playSound(soundName) {
-    if (currentSound) {
-        currentSound.pause(); // Pause any currently playing sound
-        currentSound.currentTime = 0; // Reset sound
-    }
+const buttons = document.querySelectorAll('.btn:not(.stop)');
+const stopButton = document.querySelector('.stop');
+let currentAudio;
 
-    currentSound = new Audio(`./sounds/${soundName}.mp3`); // Load new sound from the sounds folder
-    currentSound.play(); // Play the new sound
+buttons.forEach(button => {
+    button.addEventListener('click', () => {
+        const sound = button.getAttribute('data-sound');
+        playSound(sound);
+    });
+});
+
+stopButton.addEventListener('click', stopSound);
+
+function playSound(sound) {
+    stopSound(); 
+
+
+    currentAudio = document.createElement('audio');
+    currentAudio.src = `./sounds/${sound}.mp3`;
+    currentAudio.setAttribute('controls', 'controls'); 
+    currentAudio.style.display = 'none'; 
+    document.body.appendChild(currentAudio);
+
+    currentAudio.play();
 }
 
 function stopSound() {
-    if (currentSound) {
-        currentSound.pause(); // Stop the sound
-        currentSound.currentTime = 0; // Reset the audio track to the beginning
-        currentSound = null; // Clear the current sound
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        currentAudio.remove(); 
     }
 }
